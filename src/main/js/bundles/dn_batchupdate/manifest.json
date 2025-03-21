@@ -1,0 +1,78 @@
+{
+    "name": "dn_batchupdate",
+    "version": "1.0.0-SNAPSHOT",
+    "title": "${bundleName}",
+    "description": "${bundleDescription}",
+    "vendor": "con terra GmbH",
+    "keywords": [
+        "batchupdate",
+        "resultcenter",
+        "result-ui"
+    ],
+    "dependencies": {
+        "apprt-vue": "^4.12.0",
+        "apprt-binding": "^4.12.0",
+        "apprt-vuetify": "^4.12.0",
+        "map-widget": "^4.12.0"
+    },
+    "optionalDependencies": {
+        "result-ui": "^4.12.0"
+    },
+    "cssThemesExtension": [
+        {
+            "name": "*",
+            "files": [
+                "./css/styles.css"
+            ]
+        }
+    ],
+    "layout-widgets": [
+        {
+            "widgetRole": "batchUpdateWidget",
+            "window": {
+                "title": "${windowTitle}",
+                "closable": true,
+                "minimizeOnClose": true,
+                "resizable": false,
+                "marginBox": {
+                    "w": 500,
+                    "h": 300
+                },
+                "windowClass": "noPadding"
+            }
+        }
+    ],
+    "icon": {},
+    "productName": "devnet-mapapps-devnet-batchupdate",
+    "components": [
+        {
+            "name": "BatchUpdateToolHandler",
+            "provides": "dn_batchupdate.BatchUpdateToolHandler",
+            "references": [
+                {
+                    "name": "_dataModel",
+                    "providing": "resultcenter.DataModel",
+                    "cardinality": "0..1"
+                },
+                {
+                    "name": "_resultViewerService",
+                    "providing": "result-api.ResultViewerService",
+                    "cardinality": "0..1"
+                }
+            ]
+        },
+        {
+            "name": "Config",
+            "impl": "BatchUpdateAction",
+            "provides": "result-api.BulkTableAction",
+            "propertiesConstructor": true,
+            "componentFactory": true,
+            "references": [
+                {
+                    "name": "_batchUpdateToolHandler",
+                    "providing": "dn_batchupdate.BatchUpdateToolHandler"
+                }
+            ]
+        }
+    ]
+}
