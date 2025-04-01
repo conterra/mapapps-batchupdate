@@ -160,45 +160,19 @@
                     "iconClass": "icon-editor-replace-all",
                     "storeId": "AGSStore_stoerungen",
                     "editField": "art",
-                    "useSpecificSelection": "fixedValue",
-                    "defaultValue": {
-                        "value": 2,
-                        "label": "Ampel"
-                    },
-                    "fixedValue": {
-                        "value": 2,
-                        "label": "Ampel"
-                    }
-                },
-                {
-                    "id": "batchupdate_select",
-                    "title": "Batchupdate select: Art der Störungen ändern",
-                    "iconClass": "icon-editor-replace-all",
-                    "storeId": "AGSStore_stoerungen",
-                    "editField": "art",
-                    "useSpecificSelection": "selectionItems",
                     "selectionItems": [
                         {
-                            "value": 1,
-                            "label": "Laterne/Beleuchtung"
+                            "value": 4,
+                            "label": "Müll/Sperrmüll/Schrott"
                         },
                         {
                             "value": 2,
                             "label": "Ampel"
                         },
                         {
-                            "value": 3,
-                            "label": "Beschilderung"
-                        },
-                        {
-                            "value": 4,
-                            "label": "Müll/Sperrmüll/Schrott"
-                        },
-                        {
                             "value": 5,
                             "label": "Straßenschäden"
                         }
-
                     ]
                 }
             ]

@@ -20,25 +20,28 @@ import VueDijit from "apprt-vue/VueDijit";
 import ServiceResolver from "apprt/ServiceResolver";
 import apprt_when from "apprt-core/when";
 
-import { Store } from "store-api/api/Store";
-import { InjectedReference } from "apprt-core/InjectedReference";
-import { ResultViewerService, Dataset } from "result-api/api";
+import type { Store } from "store-api/api/Store";
+import type { InjectedReference } from "apprt-core/InjectedReference";
+import type { ResultViewerService, Dataset } from "result-api/api";
+import type { AdditionalParameter } from "./api";
 
 export default class BatchUpdateToolHandler {
 
     private tool: any;
-    private editField: string;
-    private store: Store;
-    private selectedIds: Array<number>;
-    private dataset: Dataset;
-    private serviceResolver: ServiceResolver;
-    private widget: BatchUpdateWidget;
-    private properties: any;
+    private editField?: string;
+    private store?: Store;
+    private selectedIds?: Array<number>;
+    private dataset?: Dataset;
+    private serviceResolver?: ServiceResolver;
+    private _bundleContext: any;
 
+    private widget?: typeof BatchUpdateWidget;
+
+    private properties: InjectedReference<Record<string, any>>;
     private _resultViewerService: InjectedReference<ResultViewerService>;
     private _dataModel: InjectedReference<any>;
     private _widgetServiceregistration: InjectedReference<any>;
-    private _bundleContext: any;
+
     private _i18n: InjectedReference<any>;
 
     public activate(componentContext: any): void {
@@ -53,46 +56,37 @@ export default class BatchUpdateToolHandler {
     onBatchUpdateToolActivated(properties: any): void {
         this.properties = properties;
         const store = this.store = this.getStore(properties.storeId);
-
+        //TODO: check if store is undefined
         this.getSelectedIds().then((ids) => {
+            if(ids.length === 0) {
+                console.error("No tables available");
+                return;
+            }
             const selectedIds = this.selectedIds = ids; // pass selected ids
             const editField = this.editField = properties.editField;
 
+            if (!store) return;
             apprt_when(store.getMetadata(), (metadata) => {
                 const fields = metadata.fields;
                 const targetField = fields.find(field => field.name === editField);
 
                 let selectionItems = [];
-                if (properties.useSpecificSelection){
-                    const selection = properties.useSpecificSelection;
-                    switch (selection) {
-                        case "selectionItems":
-                            selectionItems = properties.selectionItems;
-                            break;
-                        case "fixedValue":
-                            selectionItems = [properties.fixedValue];
-                            break;
-                        default:
-                            break;
-                    }
-                } else {
-                    if (targetField && targetField.domain){
-                        const codedValues = targetField.domain.codedValues;
-                        codedValues.map((codedValue: { code: string | number; name: string }) => {
-                            selectionItems.push({
-                                value: codedValue.code,
-                                label: codedValue.name
-                            });
-                        });
-                    }
-                    else if (properties.selectionItems) {
-                        selectionItems = properties.selectionItems;
-                    } else if (properties.fixedValue) {
-                        selectionItems = [properties.fixedValue];
-                    }
-                }
 
-                const defaultValue = properties.defaultValue || {};
+                if (properties.selectionItems) {
+                    selectionItems = properties.selectionItems;
+                } else if (properties.fixedValue) {
+                    selectionItems = [properties.fixedValue];
+                }
+                else if (targetField && targetField.domain){
+                    const codedValues = targetField.domain.codedValues;
+                    codedValues.map((codedValue: { code: string | number; name: string }) => {
+                        selectionItems.push({
+                            value: codedValue.code,
+                            label: codedValue.name
+                        });
+                    });
+                }
+                const defaultValue = properties.defaultValue || selectionItems[0];
                 this.showWidget(selectionItems, editField, selectedIds.length, defaultValue);
             });
         });
@@ -110,24 +104,24 @@ export default class BatchUpdateToolHandler {
             const service = this._resultViewerService;
             const allTables = service.currentDataTables;
 
-            if (allTables.size === 0) {
-                return;
+            if (allTables!.size === 0) {
+                return [];
             }
 
             for (const table of allTables!) {
                 const dataset = this.dataset = table.dataset;
                 const tableModel = table.tableModel;
-                this.store = dataset.dataSource;
+                this.store = dataset.dataSource as Store;
 
-                const selectedIds: Array<number> = Array.from(tableModel.getSelectedIds());
+                const selectedIds = Array.from(tableModel.getSelectedIds());
 
                 // case: some ids have been selected -> use those
                 if (selectedIds.length) {
-                    return selectedIds;
+                    return selectedIds as Array<number>;
                 } else {
                     // case: no selected ids -> use all in result-ui
                     const allIds = await dataset.queryAllIds().toArray();
-                    return allIds;
+                    return allIds as Array<number>;
                 }
             }
         } else if (this._dataModel) {
@@ -147,6 +141,7 @@ export default class BatchUpdateToolHandler {
         } else {
             console.error("No datsource available");
         }
+        return []; // Ensure a return value in all cases
     }
 
     private showWidget(selectionItems: Array<object>, editField: string, idCount: number, defaultValue: object): void {
@@ -182,7 +177,7 @@ export default class BatchUpdateToolHandler {
         }
     }
 
-    private getWidget(): BatchUpdateWidget {
+    private getWidget(): typeof BatchUpdateWidget {
         const vm = new Vue(BatchUpdateWidget);
 
         const widget = VueDijit(vm, {
@@ -197,12 +192,14 @@ export default class BatchUpdateToolHandler {
         return widget;
     }
 
-    private listenToViewModelEvents(vm: BatchUpdateWidget) {
+    private listenToViewModelEvents(vm: typeof BatchUpdateWidget) {
         vm.$off();
 
-        vm.$on('update-confirmed', (selectedValue) => {
+        vm.$on('update-confirmed', (selectedValue: number|string) => {
+            if (!this.store) return;
             const store = this.store;
             const layer = store.layer || store?.masterStore.layer;
+            if(!this.selectedIds || this.selectedIds.length === 0) return;
             const ids: Array<number> = this.selectedIds;
 
             const edits = this.constructEditsArray(ids, selectedValue);
@@ -211,13 +208,13 @@ export default class BatchUpdateToolHandler {
                 updateFeatures: edits
             }).then((response: __esri.FeatureEditResult) => {
                 const results = response.updateFeatureResults;
-                const errored = (result: boolean) => !!result.error;
+                const errored = (result: any): boolean => !!result.error;
 
                 if (results.every(errored)) {
                     vm.resultState = "error";
                 } else if (results.some(errored)) {
                     vm.resultState = "warn";
-                    vm.errorCount = results.filter(result => result.error).length;
+                    vm.errorCount = results.filter((result: any) => result.error).length;
                     this.refreshDataDisplay();
                 } else {
                     vm.resultState = "success";
@@ -227,13 +224,13 @@ export default class BatchUpdateToolHandler {
         });
     }
 
-    private constructEditsArray(ids: Array<number>, selectedValue: string): Array<object> {
+    private constructEditsArray(ids: Array<number>, selectedValue: number|string): Array<object> {
         const store = this.store;
-        const idProperty: string = store["idProperty"];
+        const idProperty: string = store?.["idProperty"] ?? "";
         const editField: string = this.editField;
-        const additionalParameters = this.properties.additionalParameters;
+        const additionalParameters = this.properties?.additionalParameters;
 
-        const edits = [];
+        const edits: any[] = [];
         ids.map(id => {
             const temp = {
                 attributes: {
@@ -243,7 +240,7 @@ export default class BatchUpdateToolHandler {
             };
 
             if (additionalParameters)
-                additionalParameters.forEach((param: object) => {
+                additionalParameters.forEach((param: AdditionalParameter) => {
                     if (param.type === "date" && !param.value) {
                         temp.attributes[param.field] = new Date().getTime();
                     } else {
@@ -259,20 +256,20 @@ export default class BatchUpdateToolHandler {
 
     private async refreshDataDisplay(): Promise<void> {
         if (this._resultViewerService) {
-            const dataset = this.dataset;
-
+            const dataset = this.dataset!;
             const ids= await dataset.queryAllIds().toArray();
             dataset.updateItemsById(ids);
         }
         else if (this._dataModel){
-            this.selectedIds.forEach(id => this.store.invalidate(id));
+            this.selectedIds!.forEach(id => this.store!.invalidate(id));
             this._dataModel.fireDataChanged({
                 updated: true
             });
         }
     }
 
-    private getStore(id: string): Store {
+    private getStore(id: string): Store|undefined {//TODO: check return type
+        if (!this.serviceResolver) return;
         return this.serviceResolver.getService("ct.api.Store", "(id=" + id + ")");
     }
 
