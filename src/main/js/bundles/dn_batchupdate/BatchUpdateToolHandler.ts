@@ -20,45 +20,38 @@ import VueDijit from "apprt-vue/VueDijit";
 import ServiceResolver from "apprt/ServiceResolver";
 import apprt_when from "apprt-core/when";
 
-import type { Store } from "store-api/api/Store";
 import type { InjectedReference } from "apprt-core/InjectedReference";
+import type { Store } from "store-api/api/Store";
 import type { ResultViewerService, Dataset } from "result-api/api";
 import type { AdditionalParameter } from "./api";
+import type { BundleContext, ComponentContext } from "apprt/BundleContext";
 
 export class BatchUpdateToolHandler {
-
-    private tool: any;
     private editField?: string;
     private store?: Store;
     private selectedIds?: Array<number>;
     private dataset?: Dataset;
     private serviceResolver?: ServiceResolver;
-    private _bundleContext: any;
-
+    private properties?: Record<string, any>;
     private widget?: typeof BatchUpdateWidget;
 
-    private properties: InjectedReference<Record<string, any>>;
+    private _i18n: InjectedReference<any>;
+    private _bundleContext: BundleContext;
     private _resultViewerService: InjectedReference<ResultViewerService>;
     private _dataModel: InjectedReference<any>;
     private _widgetServiceregistration: InjectedReference<any>;
 
-    private _i18n: InjectedReference<any>;
-
-    public activate(componentContext: any): void {
+    public activate(componentContext: ComponentContext): void {
         const bCtx = this._bundleContext = componentContext.getBundleContext();
         this.serviceResolver = new ServiceResolver({ bundleCtx: bCtx });
     }
 
-    /**
-     * Called as handlerScope of BatchUpdateTool
-     * Wraps getting ids from results, getting coded values if avaliable and widget creation
-     */
     onBatchUpdateToolActivated(properties: any): void {
         this.properties = properties;
         const store = this.store = this.getStore(properties.storeId);
         //TODO: check if store is undefined
         this.getSelectedIds().then((ids) => {
-            if(ids.length === 0) {
+            if (ids.length === 0) {
                 console.error("No tables available");
                 return;
             }
@@ -77,7 +70,7 @@ export class BatchUpdateToolHandler {
                 } else if (properties.fixedValue) {
                     selectionItems = [properties.fixedValue];
                 }
-                else if (targetField && targetField.domain){
+                else if (targetField && targetField.domain) {
                     const codedValues = targetField.domain.codedValues;
                     codedValues.map((codedValue: { code: string | number; name: string }) => {
                         selectionItems.push({
@@ -92,13 +85,6 @@ export class BatchUpdateToolHandler {
         });
     }
 
-    /**
-     * Function used to get either all selected ids or all ids from result center.
-     * If ids were selected they are returned, else all ids are.
-     *
-     * @returns Promise<Array<number>> Array of ids
-     *
-     */
     private async getSelectedIds(): Promise<Array<number>> {
         if (this._resultViewerService) {
             const service = this._resultViewerService;
@@ -114,12 +100,9 @@ export class BatchUpdateToolHandler {
                 this.store = dataset.dataSource as Store;
 
                 const selectedIds = Array.from(tableModel.getSelectedIds());
-
-                // case: some ids have been selected -> use those
                 if (selectedIds.length) {
                     return selectedIds as Array<number>;
                 } else {
-                    // case: no selected ids -> use all in result-ui
                     const allIds = await dataset.queryAllIds().toArray();
                     return allIds as Array<number>;
                 }
@@ -129,19 +112,16 @@ export class BatchUpdateToolHandler {
             this.store = dataModel.datasource;
 
             const selectedIds: Array<number> = dataModel.getSelected();
-
-            // case: some ids have been selected -> use those
             if (selectedIds.length) {
                 return selectedIds;
             } else {
-                // case: no selected ids -> use all in resultcenter
                 const allIds = await dataModel.getIdList();
                 return allIds;
             }
         } else {
-            console.error("No datsource available");
+            console.error("No datasource available");
         }
-        return []; // Ensure a return value in all cases
+        return [];
     }
 
     private showWidget(selectionItems: Array<object>, editField: string, idCount: number, defaultValue: object): void {
@@ -166,13 +146,11 @@ export class BatchUpdateToolHandler {
 
     private hideWidget(): void {
         this.widget = null;
-        const registration = this._widgetServiceregistration;
 
-        // clear the reference
+        const registration = this._widgetServiceregistration;
         this._widgetServiceregistration = null;
 
         if (registration) {
-            // call unregister
             registration.unregister();
         }
     }
@@ -195,11 +173,11 @@ export class BatchUpdateToolHandler {
     private listenToViewModelEvents(vm: typeof BatchUpdateWidget) {
         vm.$off();
 
-        vm.$on('update-confirmed', (selectedValue: number|string) => {
+        vm.$on('update-confirmed', (selectedValue: number | string) => {
             if (!this.store) return;
             const store = this.store;
             const layer = store.layer || store?.masterStore.layer;
-            if(!this.selectedIds || this.selectedIds.length === 0) return;
+            if (!this.selectedIds || this.selectedIds.length === 0) return;
             const ids: Array<number> = this.selectedIds;
 
             const edits = this.constructEditsArray(ids, selectedValue);
@@ -224,7 +202,7 @@ export class BatchUpdateToolHandler {
         });
     }
 
-    private constructEditsArray(ids: Array<number>, selectedValue: number|string): Array<object> {
+    private constructEditsArray(ids: Array<number>, selectedValue: number | string): Array<object> {
         const store = this.store;
         const idProperty: string = store?.["idProperty"] ?? "";
         const editField: string = this.editField;
@@ -257,10 +235,10 @@ export class BatchUpdateToolHandler {
     private async refreshDataDisplay(): Promise<void> {
         if (this._resultViewerService) {
             const dataset = this.dataset!;
-            const ids= await dataset.queryAllIds().toArray();
+            const ids = await dataset.queryAllIds().toArray();
             dataset.updateItemsById(ids);
         }
-        else if (this._dataModel){
+        else if (this._dataModel) {
             this.selectedIds!.forEach(id => this.store!.invalidate(id));
             this._dataModel.fireDataChanged({
                 updated: true
@@ -268,7 +246,7 @@ export class BatchUpdateToolHandler {
         }
     }
 
-    private getStore(id: string): Store|undefined {//TODO: check return type
+    private getStore(id: string): Store | undefined {
         if (!this.serviceResolver) return;
         return this.serviceResolver.getService("ct.api.Store", "(id=" + id + ")");
     }

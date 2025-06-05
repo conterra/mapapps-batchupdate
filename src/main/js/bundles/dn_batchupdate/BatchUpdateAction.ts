@@ -14,23 +14,22 @@
 /// limitations under the License.
 ///
 
-import { BulkButtonTableAction, TableActionDisplayState, DataTable } from "result-api/api";
+import { BulkButtonTableAction, type TableActionDisplayState, type DataTable } from "result-api/api";
+
 import type { InjectedReference } from "apprt-core/InjectedReference";
-import type Tool from "ct/tools/Tool";
+import type { BatchUpdateToolHandler } from "./BatchUpdateToolHandler";
 
 export class BatchUpdateAction implements BulkButtonTableAction {
-    private _properties: InjectedReference<any>;
-    private _batchUpdateToolHandler: InjectedReference<any>;
-    uiType = "button" as const;
-    toolId: "";
+    public uiType = "button" as const;
+    public toolId: "";
+    public icon: string;
+    public label: string;
+    public tooltip: string;
+    public id: string;
+    public rules: Array<any>;
 
-    //public interface
-    icon: string;
-    label: string;
-    tooltip: string;
-    id: string;
-    rules: Array<any>;
-    private connectedTool: InjectedReference<typeof Tool> = undefined;
+    private _properties: InjectedReference<Record<string, any>>;
+    private _batchUpdateToolHandler: InjectedReference<BatchUpdateToolHandler>;
 
     constructor(properties: Record<string, any>) {
         this.toolId = properties.toolId;
@@ -42,11 +41,11 @@ export class BatchUpdateAction implements BulkButtonTableAction {
     }
 
     async trigger(): Promise<void> {
-        this._batchUpdateToolHandler.onBatchUpdateToolActivated(this._properties);
+        this._batchUpdateToolHandler!.onBatchUpdateToolActivated(this._properties);
     }
 
     provideDisplayState(dataTable: DataTable): Partial<TableActionDisplayState> {
-        const visible = dataTable.id === this._properties.storeId;
+        const visible = dataTable.id === this._properties!.storeId;
         return { visible };
     }
 
