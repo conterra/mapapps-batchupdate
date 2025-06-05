@@ -25,7 +25,7 @@ import type { InjectedReference } from "apprt-core/InjectedReference";
 import type { ResultViewerService, Dataset } from "result-api/api";
 import type { AdditionalParameter } from "./api";
 
-export default class BatchUpdateToolHandler {
+export class BatchUpdateToolHandler {
 
     private tool: any;
     private editField?: string;

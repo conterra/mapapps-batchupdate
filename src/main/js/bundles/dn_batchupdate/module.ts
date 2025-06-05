@@ -14,6 +14,5 @@
 /// limitations under the License.
 ///
 
-import ".";
-import "./BatchUpdateAction";
-import "./BatchUpdateToolHandler";
+export { BatchUpdateAction } from "./BatchUpdateAction";
+export { BatchUpdateToolHandler } from "./BatchUpdateToolHandler";
