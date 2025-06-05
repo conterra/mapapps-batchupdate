@@ -60,7 +60,14 @@
                     }
                 ],
                 "map": {
-                    "layers": []
+                    "layers": [
+                        {
+                            "title": "Feldnotizen: Polygone",
+                            "id": "fieldnotes",
+                            "type": "AGS_FEATURE",
+                            "url": "https://services.arcgis.com/ObdAEOfl1Z5LP2D0/arcgis/rest/services/Feldnotizen_erfassen/FeatureServer/2"
+                        }
+                    ]
                 },
                 "view": {
                     "viewmode": "2D",
@@ -142,6 +149,9 @@
             }
         },
         "agssearch": {
+            "AutoStoreRegistration": {
+                "componentEnabled": true
+            },
             "AGSStore": [
                 {
                     "id": "AGSStore_stoerungen",
