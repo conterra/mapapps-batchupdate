@@ -1,7 +1,7 @@
 [![devnet-bundle-snapshot](https://github.com/conterra/mapapps-batchupdate/actions/workflows/devnet-bundle-snapshot.yml/badge.svg)](https://github.com/conterra/mapapps-batchupdate/actions/workflows/devnet-bundle-snapshot.yml)
 ![Static Badge](https://img.shields.io/badge/tested_for_map.apps-4.19.1-%20?labelColor=%233E464F&color=%232FC050)
 # Batchupdate Bundle
-The Batchupdate Bundle allows the update of feature attributes in the result-ui and resultcenter in batches.
+The Batchupdate Bundle allows the update of feature attributes in the result-ui in batches.
 
 ## Sample app
 https://demos.conterra.de/mapapps/resources/apps/downloads_batchupdate/index.html
