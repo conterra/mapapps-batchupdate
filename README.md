@@ -1,25 +1,19 @@
-# mapapps-devnet-blueprint
+[![devnet-bundle-snapshot](https://github.com/conterra/mapapps-batchupdate/actions/workflows/devnet-bundle-snapshot.yml/badge.svg)](https://github.com/conterra/mapapps-batchupdate/actions/workflows/devnet-bundle-snapshot.yml)
+![Static Badge](https://img.shields.io/badge/tested_for_map.apps-4.19.1-%20?labelColor=%233E464F&color=%232FC050)
+# Batchupdate Bundle
+The Batchupdate Bundle allows the update of feature attributes in the result-ui and resultcenter in batches.
 
-**This project is not intended for use by non-con terra users.** It is designed for the creation of bundles and their releases in GitHub and can access con terra internal infrastructures for this purpose. To develop your own map.apps bundles, use the [mapapps-4-developers project](https://github.com/conterra/mapapps-4-developers).
+## Sample app
+https://demos.conterra.de/mapapps/resources/apps/downloads_batchupdate/index.html
 
-This project is a starting point for programming custom map.apps bundles and themes. It contains examples for common tasks such as building widgets with Vue.js or creating your own custom themes.
-You may use this project as a blueprint for starting your own map.apps project.
+![Screenshot App](https://github.com/conterra/mapapps-batchupdate/blob/main/screenshot.JPG)
 
-Since both Typescript and Javascript can be used to implement bundles, this project contains two bundles with the same functionality, `sample_camera` implemented in Typescript and `sample_camera_js` implemented in Javascript.
-Initially only the `sample_camera` bundle is included in the `Demo` sample app.
+## Installation guide
+1. Add the bundle `dn_batchupdate` to your app.
+2. Configure batchupdate tools as described in the [Documentation](https://github.com/conterra/mapapps-welcome/tree/main/src/main/js/bundles/dn_batchupdate).
 
-For detailed documentation on how to use map.apps for Developers to extend map.apps, see the [map.apps Developer's Guide](https://docs.conterra.de/en/mapapps/latest/developersguide/getting-started/).
-
-## Software Requirements
-
-- Java >= 17
-- Maven >= 3.9.0
-
-## Quick start
-
-Clone this project and ensure that you have all required dependencies installed correctly (see [Documentation](https://docs.conterra.de/en/mapapps/latest/developersguide/getting-started/set-up-development-environment.html)).
-
-Then run the following commands from the project root directory to start a local development server:
+## Development guide
+Run the following commands from the project root directory to start a local development server:
 
 ```bash
 # install all required node modules
@@ -31,5 +25,3 @@ $ mvn compile -Denv=dev -Pinclude-mapapps-deps
 # run unit tests
 $ mvn test -P run-js-tests,include-mapapps-deps
 ```
-
-For more details refer to the [Developer's Guide](https://docs.conterra.de/en/mapapps/latest/developersguide/getting-started/).
