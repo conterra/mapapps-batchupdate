@@ -21,7 +21,7 @@
     xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>de.conterra.devnet</groupId>
-    <artifactId>mapapps-devnet-blueprint</artifactId>
+    <artifactId>mapapps-batchupdate</artifactId>
     <version>1.0.0-SNAPSHOT</version>
     <packaging>jar</packaging>
     <repositories>
@@ -482,9 +482,9 @@
         </plugins>
     </build>
     <scm>
-        <connection>scm:git:https://github.com/conterra/mapapps-devnet-batchupdate.git</connection>
-        <developerConnection>scm:git:https://github.com/conterra/mapapps-devnet-batchupdate.git</developerConnection>
-        <url>https://github.com/conterra/mapapps-devnet-batchupdate</url>
+        <connection>scm:git:https://github.com/conterra/mapapps-devnet.git</connection>
+        <developerConnection>scm:git:https://github.com/conterra/mapapps-batchupdate.git</developerConnection>
+        <url>https://github.com/conterra/mapapps-batchupdate</url>
         <tag>HEAD</tag>
     </scm>
     <distributionManagement>
