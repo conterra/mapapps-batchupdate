@@ -24,14 +24,14 @@ test('Create Screenshot for GitHub Page', async ({ page }) => {
     await page.goto('http://localhost:9090/');
     const canvas = new MapCanvas(page);
     await canvas.loaded();
-    await page.getByRole('button', { name: 'Räumliche Auswahl' }).click();
-    await page.getByRole('button', { name: 'Polygon' }).click();
+
+    await page.click('.ctTool_selection-ui-tool');
+    await page.click('text=Rectangle');
 
     await canvas.clickOnMap({ x: 100, y: 100 });
     await canvas.clickOnMap({ x: 100, y: 500 });
     await canvas.clickOnMap({ x: 500, y: 500 });
     await page.mouse.dblclick(500, 100);
-    await page.waitForTimeout(5000);
 
     await expectToMatchScreenshot(page, "screenshot.png", {
         timeout: 10000
