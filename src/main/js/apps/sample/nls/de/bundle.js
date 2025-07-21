@@ -95,5 +95,10 @@ module.exports = {
         municipal: "st\xE4dtischer",
         zip: "PLZ",
         type: "Art"
+    },
+    batchupdate: {
+        stoerungen: {
+            title: "Batchupdate: Störungen"
+        }
     }
 };

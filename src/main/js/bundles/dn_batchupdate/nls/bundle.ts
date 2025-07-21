@@ -16,25 +16,25 @@
 
 const i18n = {
     root: ({
-        bundleName: "Laixo Batch Update",
-        bundleDescription: "Dieses Bundle erlaubt das Aktualisieren eines Feldwertes für alle im Resultcenter oder der Result-UI selektierten Objekte.",
+        bundleName: "Batch Update",
+        bundleDescription: "This bundle allows updating a field value for all objects selected in the Result Center or the Result UI.",
         windowTitle: "Batch Update",
         ui: {
-            firstStep: "Selektion",
-            secondStep: "Bestätigung",
-            thirdStep: "Ergebnisse",
-            trigger: "Aktualisierung ausführen",
-            confirmationTextSingle: "Sind Sie sicher? 1 Objekt wird aktualisiert.",
-            confirmationTextMultiple: "Sind Sie sicher? {NUMBER_AFFECTED_OBJECTS} Objekte werden aktualisiert.",
-            accept: "Objekte aktualisieren",
-            cancel: "Aktualisierung abbrechen",
+            firstStep: "Selection",
+            secondStep: "Confirmation",
+            thirdStep: "Results",
+            trigger: "Execute Update",
+            confirmationTextSingle: "Are you sure? 1 object will be updated.",
+            confirmationTextMultiple: "Are you sure? {NUMBER_AFFECTED_OBJECTS} objects will be updated.",
+            accept: "Update objects",
+            cancel: "Cancel update",
             feedback: {
-                success: "Batch Update erfolgreich durchgeführt.",
-                warn: "Bei dem Batch Update sind Fehler aufgetreten.",
-                error: "Batch Update fehgeschlagen.",
-                amountNone: "Keine Objekte wurden aktualisiert.",
-                amountSingle: "1 Objekt wurde aktualisiert.",
-                amountMultiple: "{NUMBER_AFFECTED_OBJECTS} Objekte wurden aktualisiert."
+                success: "Batch update completed successfully.",
+                warn: "Errors occurred during the batch update.",
+                error: "Batch update failed.",
+                amountNone: "No objects were updated.",
+                amountSingle: "1 object was updated.",
+                amountMultiple: "{NUMBER_AFFECTED_OBJECTS} objects were updated."
             }
         }
     }),

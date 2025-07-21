@@ -18,20 +18,21 @@ import { test } from '@playwright/test';
 
 import { expectToMatchScreenshot } from './common/testUtils';
 import { MapCanvas } from "./components/map-canvas";
+import { SelectionUi } from './components/selection-ui';
 
 // test used to generate a screenshot for the bundle documentation
 test('Create Screenshot for GitHub Page', async ({ page }) => {
     await page.goto('http://localhost:9090/');
+    await page.getByRole("button", { name: "Spatial Selection" }).click();
+
+    const selectionUi = new SelectionUi(page);
+    await selectionUi.selectType("rectangle");
+
     const canvas = new MapCanvas(page);
     await canvas.loaded();
-
-    await page.click('.ctTool_selection-ui-tool');
-    await page.click('text=Rectangle');
-
-    await canvas.clickOnMap({ x: 100, y: 100 });
-    await canvas.clickOnMap({ x: 100, y: 500 });
-    await canvas.clickOnMap({ x: 500, y: 500 });
-    await page.mouse.dblclick(500, 100);
+    await canvas.drawRectangle({ top: 50, left: 50, width: 1050, height: 1050 });
+    await page.waitForTimeout(1000);
+    await page.getByRole("button", { name: "Batchupdate: Incidents" }).click();
 
     await expectToMatchScreenshot(page, "screenshot.png", {
         timeout: 10000

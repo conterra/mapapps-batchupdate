@@ -95,6 +95,11 @@ module.exports = {
             municipal: "municipal",
             zip: "Zip code",
             type: "Type"
+        },
+        batchupdate: {
+            stoerungen: {
+                title: "Batchupdate: Incidents"
+            }
         }
     },
     "de": true

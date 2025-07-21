@@ -46,7 +46,7 @@
             "Config": [
                 {
                     "id": "batchupdate_ampel",
-                    "title": "Batchupdate: Art der Störungen ändern",
+                    "title": "${batchupdate.stoerungen.title}",
                     "iconClass": "icon-editor-replace-all",
                     "storeId": "stoerungen",
                     "editField": "art",

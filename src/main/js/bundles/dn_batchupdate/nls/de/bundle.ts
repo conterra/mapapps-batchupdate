@@ -17,7 +17,7 @@
 import { type Messages } from "../bundle";
 
 const i18n = {
-    bundleName: "Laixo Batch Update",
+    bundleName: "Batch Update",
     bundleDescription: "Dieses Bundle erlaubt das Aktualisieren eines Feldwertes für alle im Resultcenter oder der Result-UI selektierten Objekte.",
     windowTitle: "Batch Update",
     ui: {
