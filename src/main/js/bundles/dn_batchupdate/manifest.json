@@ -11,15 +11,15 @@
     ],
     "main": "",
     "dependencies": {
-        "apprt": "^4.12.0",
-        "apprt-vue": "^4.12.0",
-        "apprt-core": "^4.12.0",
-        "apprt-binding": "^4.12.0",
-        "apprt-vuetify": "^4.12.0",
-        "map-widget": "^4.12.0"
+        "apprt": "^4.20.0",
+        "apprt-vue": "^4.20.0",
+        "apprt-core": "^4.20.0",
+        "apprt-binding": "^4.20.0",
+        "apprt-vuetify": "^4.20.0",
+        "map-widget": "^4.20.0"
     },
     "optionalDependencies": {
-        "result-ui": "^4.12.0"
+        "result-ui": "^4.20.0"
     },
     "cssThemesExtension": [
         {
