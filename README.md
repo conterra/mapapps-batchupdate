@@ -4,10 +4,10 @@
 # Batchupdate Bundle
 The Batchupdate Bundle allows the update of feature attributes in the result-ui in batches.
 
+![Screenshot App](https://github.com/conterra/mapapps-batchupdate/blob/main/screenshot.png)
+
 ## Sample app
 https://demos.conterra.de/mapapps/resources/apps/public_demo_batchupdate/index.html
-
-![Screenshot App](https://github.com/conterra/mapapps-batchupdate/blob/main/screenshot.JPG)
 
 ## Installation guide
 1. Add the bundle `dn_batchupdate` to your app.
